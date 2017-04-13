@@ -1,37 +1,56 @@
 import json
 from websocket import create_connection
+import threading
 
-ws = create_connection("ws://cs3100-s2.herokuapp.com/actions")
+class Listen(threading.Thread):
+	def __init__(self, ws):
+		super(Listen, self).__init__()
+		self.ws = ws
+		self.stopped = False
 
-print("Username: ")
-name = input("")
+	def stop(self):
+		self.stopped = True
 
-"""
-#JSON to Python
-jsonData = '{"action": "login", "name": "Miggy"}'
-jsonToPython = json.loads(jsonData)
+	def run(self):
+		while not self.stopped:
+			jsonData = self.ws.recv()
+			jsonToPython = json.loads(jsonData)
+			print("> {}".format(jsonToPython))
+		print("EXIT THREAD")
 
-#Python to JSON
-pythonData = {'action':'login', 'name':name}
-pythonToJson = json.dumps(pythonData)
-"""
+def main():
+	ws = create_connection("ws://cs3100-s2.herokuapp.com/actions")
 
-#Python to JSON
-pythonData = {'action':'login', 'name':name}
-pythonToJson = json.dumps(pythonData)
+	print("Username: ")
+	name = input("")
 
-ws.send(pythonToJson)
+	#Python to JSON
+	pythonData = {'action':'login', 'name':name}
+	pythonToJson = json.dumps(pythonData)
 
-jsonData = ws.recv()
-jsonToPython = json.loads(jsonData)
+	ws.send(pythonToJson)
 
-print("Message: ")
-message = input("")
+	jsonData = ws.recv()
+	jsonToPython = json.loads(jsonData)
 
-pythonData = {'action':'message', 'text':message}
-pythonToJson = json.dumps(pythonData)
-ws.send(pythonToJson)
+	listener = Listen(ws)
+	listener.start()
+	running = True
 
-#ws.run_forever()
+	while running:
+		print("Message: ")
+		message = input("")
 
-ws.close()
+		if message == "exit":
+			running = False
+			listener.stop()
+		else:
+			pythonData = {'action':'message', 'text':message}
+			pythonToJson = json.dumps(pythonData)
+			ws.send(pythonToJson)
+
+	#ws.run_forever()
+	listener.join()
+	ws.close()
+
+main()

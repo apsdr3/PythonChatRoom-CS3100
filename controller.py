@@ -9,3 +9,5 @@ if __name__ == '__main__':
 	model.login() #login specs
 	while(True):
 		model.sendMessage() #sends message
+		jsonData = model.receiveMessage() #receives message sent to server
+		print(jsonData)
