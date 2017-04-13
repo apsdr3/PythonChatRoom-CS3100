@@ -8,23 +8,53 @@ pythonData = {'action':'login', 'name':name}
 pythonToJson = json.dumps(pythonData)
 """
 import json
+from websocket import create_connection
 
-class Model(object)
-	def createConnection()
+global ws
+
+class Model(object):
+
+	#def __init__(self):
+
+
+	def createConnection(self):
+		global ws
 		ws = create_connection("ws://cs3100-s2.herokuapp.com/actions")
-		
-	def createUsername()
-		print("Username: ")
-		name = input("")
+		#ws.run_forever()
 
-	def pythonToJson(action, data)
+
+	def closeConenction(self):
+		ws.close()
+
+	def login(self):
+		print("Username: ", end = "")
+		username = input("")
+		print("Password: ", end = "")
+		password = input("")
+		jsonData = self.pythonToJson("login", "name", username)
+		ws.send(jsonData)
+		return
+
+	def sendMessage(self):
+		global ws
+		print("Message: ", end = "")
+		message = input("")
+		jsonData = self.pythonToJson("message", "text", message)
+		ws.send(jsonData)
+
+	def receiveMessage(self):
+		global ws
+		jsonData = ws.recv()
+		return jsonData
+
+	def pythonToJson(self, action, field, data):
 		#Python to JSON
-		pythonData = {'action':action, 'name':data}
+		pythonData = {'action':action, field:data}
 		jsonData = json.dumps(pythonData)
 		return jsonData
 
 	#need to figure out how to separate json values and store
-	def jsonToPython(data)
+	def jsonToPython(self, data):
 		data = json.loads(jsonData)
 
 """
