@@ -5,31 +5,62 @@ from tkinter import *
 class ChatRoom(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-        self.uframe = tk.Frame(self)
+
+        #UPPER CONTAINER
+        self.uframe = tk.Frame(self, bg="#C0C0C0", relief=SUNKEN, borderwidth=2)
         self.uframe.place(x=25, y=25, width=775, height=100)
-        self.mframe = tk.Frame(self)
-        self.mframe.place(x=200, y=150, width=600, height=525)
-        self.label1 = tk.Label(self.uframe, text="User Name : ")
-        self.label1.place(x=0, y=25)
-        self.label2 = tk.Label(self.mframe, text="CHAT")
-        self.label2.place(x=10, y=0)
+        
         self.entry1 = tk.Entry(self.uframe, bd=3)
-        self.entry1.place(x=0, y=50)
+        self.entry1.place(x=10, y=50)
+
+        self.label1 = tk.Label(self.uframe, text="User Name : ", bg="#C0C0C0")
+        self.label1.place(x=10, y=25)
+        
+        self.button1 = tk.Button(self.uframe, text="Enter", command=self.buttonpress1)
+        self.button1.place(x=150, y=50)
+        
+        #LEFT CONTAINER
+        self.lframe = tk.Frame(self, bg="#C0C0C0", relief=SUNKEN, borderwidth=2)
+        self.lframe.place(x=25, y=150, width=150, height=650)
+
+        #MIDDLE CONTAINER
+        self.mframe = tk.Frame(self, bg="#C0C0C0", relief=SUNKEN, borderwidth=2)
+        self.mframe.place(x=200, y=150, width=600, height=525)
+
+        self.label2 = tk.Label(self.mframe, text="CHAT :", bg="#C0C0C0")
+        self.label2.place(x=10, y=10)
+        
         self.scroll = tk.Scrollbar(self.mframe)
         self.scroll.pack(side = RIGHT, fill=Y)
-
-        self.yval = 25
         
-        self.update("Hello World! Welcome to the chatroom!", "CHATROOM")
+        #BOTTOM CONTAINER
+        self.bframe = tk.Frame(self, bg="#C0C0C0", relief=SUNKEN, borderwidth=2)
+        self.bframe.place(x=200, y=700, width=600, height=100)
+        
+        self.entry2 = tk.Entry(self.bframe, bd=3, width=85)
+        self.entry2.place(x=20, y=20)
+
+        self.button2 = tk.Button(self.bframe, text="Send", command=self.buttonpress2)
+        self.button2.place(x=550, y=20)
+        
+        self.yval = 35
     
     def update(self,S,U):
         now = time.strftime("%H:%M:%S" , time.gmtime())
         M = now + " " + U + " : " + S + "\n"
-        self.message = tk.Message(self.mframe, text=M, relief=RAISED, width=580, anchor=W)
-        self.message.place(x=0, y=self.yval, width=580, height=50) 
+        self.message = tk.Message(self.mframe, text=M, relief=RAISED, width=579, anchor=W, borderwidth=2)
+        self.message.place(x=0, y=self.yval, width=579, height=50)
         self.yval=self.yval+50
+
+    def buttonpress1(self):
+        U = self.entry1.get()
+        
+    def buttonpress2(self):
+        T = self.entry2.get()
     
 if __name__== "__main__":
     C = ChatRoom()
+    C.after(1000, C.update("Hello World! Welcome to the chatroom!", "CHATROOM"))
     C.mainloop()
-
+        
+    
