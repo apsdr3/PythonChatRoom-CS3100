@@ -29,9 +29,16 @@ class ChatRoom(tk.Tk):
 
         self.label2 = tk.Label(self.mframe, text="CHAT :", bg="#C0C0C0")
         self.label2.place(x=10, y=10)
-        
+
+        self.textbox = tk.Text(self.mframe)
+        self.textbox.place(x=10, y=30, width=565, height=480)
+        self.textbox.config(state=DISABLED)
+
         self.scroll = tk.Scrollbar(self.mframe)
-        self.scroll.pack(side = RIGHT, fill=Y)
+        self.scroll.pack(side=RIGHT, fill=Y)
+
+        self.textbox.config(yscrollcommand=self.scroll.set)
+        self.scroll.config(command=self.textbox.yview)
         
         #BOTTOM CONTAINER
         self.bframe = tk.Frame(self, bg="#C0C0C0", relief=SUNKEN, borderwidth=2)
@@ -43,24 +50,25 @@ class ChatRoom(tk.Tk):
         self.button2 = tk.Button(self.bframe, text="Send", command=self.buttonpress2)
         self.button2.place(x=550, y=20)
         
-        self.yval = 35
-    
     def update(self,S,U):
         now = time.strftime("%H:%M:%S" , time.gmtime())
         M = now + " " + U + " : " + S + "\n"
-        self.message = tk.Message(self.mframe, text=M, relief=RAISED, width=579, anchor=W, borderwidth=2)
-        self.message.place(x=0, y=self.yval, width=579, height=50)
-        self.yval=self.yval+50
+        self.textbox.config(state=NORMAL)
+        self.textbox.insert(END, M)
+        self.textbox.config(state=DISABLED)
+        #Recieve S and U from controller to display message
 
     def buttonpress1(self):
         U = self.entry1.get()
+        #Send U to controller for username
         
     def buttonpress2(self):
         T = self.entry2.get()
+        #Send T to controller for text
     
 if __name__== "__main__":
     C = ChatRoom()
-    C.after(1000, C.update("Hello World! Welcome to the chatroom!", "CHATROOM"))
+    C.update("Hello World! Welcome to the chatroom!", "CHATROOM")
     C.mainloop()
         
     
