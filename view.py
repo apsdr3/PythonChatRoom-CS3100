@@ -27,11 +27,8 @@ class ChatRoom(tk.Tk):
         self.mframe = tk.Frame(self, bg="#C0C0C0", relief=SUNKEN, borderwidth=2)
         self.mframe.place(x=200, y=150, width=600, height=525)
 
-        self.label2 = tk.Label(self.mframe, text="CHAT :", bg="#C0C0C0")
-        self.label2.place(x=10, y=10)
-
         self.textbox = tk.Text(self.mframe)
-        self.textbox.place(x=10, y=30, width=565, height=480)
+        self.textbox.place(x=0, y=0, width=577, height=520)
         self.textbox.config(state=DISABLED)
 
         self.scroll = tk.Scrollbar(self.mframe)
