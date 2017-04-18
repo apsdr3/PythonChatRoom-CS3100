@@ -71,21 +71,6 @@ class Listen(threading.Thread):
 			print("> {}".format(jsonToPython))
 		print("EXIT THREAD")
 
-def main():
-	ws = create_connection("ws://cs3100-s2.herokuapp.com/actions")
-
-	print("Username: ")
-	name = input("")
-
-	#Python to JSON
-	pythonData = {'action':'login', 'name':name}
-	pythonToJson = json.dumps(pythonData)
-
-	ws.send(pythonToJson)
-
-	jsonData = ws.recv()
-	jsonToPython = json.loads(jsonData)
-
 	listener = Listen(ws)
 	listener.start()
 	running = True
@@ -102,8 +87,5 @@ def main():
 			pythonToJson = json.dumps(pythonData)
 			ws.send(pythonToJson)
 
-	#ws.run_forever()
 	listener.join()
 	ws.close()
-
-main()
