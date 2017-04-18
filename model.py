@@ -18,7 +18,10 @@ class Listen(threading.Thread):
 		while not self.stopped:
 			jsonData = self.ws.recv()
 			jsonToPython = json.loads(jsonData)
+			
 			print("> {}".format(jsonToPython))
+			if jsonToPython['action'] == 'userMessage':
+				print("{}: {}".format(jsonToPython['user'], jsonToPython['text']))
 		print("EXIT THREAD")
 
 
@@ -70,7 +73,3 @@ class Model(object):
 		pythonData = {'action':action, field:data}
 		jsonData = json.dumps(pythonData)
 		return jsonData
-
-	#need to figure out how to separate json values and store
-	def jsonToPython(self, data):
-		data = json.loads(jsonData)
