@@ -6,6 +6,8 @@ class ChatRoom(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
 
+        self.minsize(825, 825)
+
         #UPPER CONTAINER
         self.uframe = tk.Frame(self, bg="#C0C0C0", relief=SUNKEN, borderwidth=2)
         self.uframe.place(x=25, y=25, width=775, height=100)
@@ -46,28 +48,35 @@ class ChatRoom(tk.Tk):
 
         self.button2 = tk.Button(self.bframe, text="Send", command=self.buttonpress2)
         self.button2.place(x=550, y=20)
+
+        #VARIABLES
+        self.T = ""
+        self.U = ""
+        self.TB = 0
+        self.UB = 0
         
-    def update(self,S,U):
+        self.update()
+             
+    def display_message(self,S,U):
         now = time.strftime("%H:%M:%S" , time.gmtime())
         M = now + " " + U + " : " + S + "\n"
         self.textbox.config(state=NORMAL)
         self.textbox.insert(END, M)
         self.textbox.config(state=DISABLED)
+        self.update()
         #Recieve S and U from controller to display message
 
     def buttonpress1(self):
-        U = self.entry1.get()
-        #Send U to controller for username
+        self.U = self.entry1.get()
+        self.UB = 1
+        self.entry1.delete(0, END)
         
     def buttonpress2(self):
-        T = self.entry2.get()
-        #Send T to controller for text
+        self.T = self.entry2.get()
+        self.TB = 1
+        self.entry2.delete(0, END)
 
+        
 
-#    if __name__== "__main__":
-def welcomeMessage():
-        C = ChatRoom()
-        C.update("Hello World! Welcome to the chatroom!", "CHATROOM")
-        C.mainloop()
         
     
