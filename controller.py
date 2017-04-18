@@ -5,7 +5,7 @@ import view as View
 if __name__ == '__main__':
 	model = Model()
 	
-	#View.welcomeMessage()	#welcomes user
+	View.welcomeMessage()	#welcomes user
 	ws = model.createConnection() #creates connection
 	
 	model.login() #login specs

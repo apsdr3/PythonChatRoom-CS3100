@@ -62,10 +62,12 @@ class ChatRoom(tk.Tk):
     def buttonpress2(self):
         T = self.entry2.get()
         #Send T to controller for text
-    
-if __name__== "__main__":
-    C = ChatRoom()
-    C.update("Hello World! Welcome to the chatroom!", "CHATROOM")
-    C.mainloop()
+
+
+#    if __name__== "__main__":
+def welcomeMessage():
+        C = ChatRoom()
+        C.update("Hello World! Welcome to the chatroom!", "CHATROOM")
+        C.mainloop()
         
     
