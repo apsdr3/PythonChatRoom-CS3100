@@ -80,3 +80,13 @@ class ChatRoom(tk.Tk):
 
         
     
+#Temporary function for printing
+def printToConsole(data):
+    if data['action'] == 'userMessage':
+        print("> {}: {}".format(data['user'], data['text']))
+    elif data['action'] == 'serverMessage':
+        print("> SERVER: {}".format(data['text']))
+    elif data['action'] == 'loginFailure':
+        print("> LOGIN FAILED: {}".format(data['reason']))
+    #else:
+        #print(data)
