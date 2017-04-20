@@ -7,11 +7,13 @@ class ChatRoom(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
 
         self.minsize(825, 825)
+        self.title("Chat Room - Client 2")
 
         #UPPER CONTAINER
         self.uframe = tk.Frame(self, bg="#C0C0C0", relief=SUNKEN, borderwidth=2)
         self.uframe.place(x=25, y=25, width=775, height=100)
         
+        """        
         self.entry1 = tk.Entry(self.uframe, bd=3)
         self.entry1.place(x=10, y=50)
 
@@ -20,7 +22,7 @@ class ChatRoom(tk.Tk):
         
         self.button1 = tk.Button(self.uframe, text="Enter", command=self.buttonpress1)
         self.button1.place(x=150, y=50)
-        
+        """
         #LEFT CONTAINER
         self.lframe = tk.Frame(self, bg="#C0C0C0", relief=SUNKEN, borderwidth=2)
         self.lframe.place(x=25, y=150, width=150, height=650)
@@ -49,6 +51,8 @@ class ChatRoom(tk.Tk):
         self.button2 = tk.Button(self.bframe, text="Send", command=self.buttonpress2)
         self.button2.place(x=550, y=20)
 
+        self.entry2.bind('<Return>', self.buttonpress2)
+
         #VARIABLES
         self.T = ""
         self.U = ""
@@ -71,7 +75,7 @@ class ChatRoom(tk.Tk):
         self.UB = 1
         self.entry1.delete(0, END)
         
-    def buttonpress2(self):
+    def buttonpress2(self, event = None):
         self.T = self.entry2.get()
         self.TB = 1
         self.entry2.delete(0, END)
