@@ -36,3 +36,13 @@ def login(ws, username, password = None):
 		#create password functionality
 	send(ws, jsonData)
 	return
+
+#returns string with chat room number identifier	
+def appendMessage(message, number):
+	message = number + message
+	return message
+
+# Deletes first message identifier i.e. first letter in sent string to outout the correct user sent message
+def fixMessageString(message):
+	message = message[1:]
+	return message

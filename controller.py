@@ -4,6 +4,7 @@ import threading
 from view import ChatRoom
 from view import Login
 import queue
+import time
 
 def listen(ws, q):
 	try:
@@ -11,7 +12,6 @@ def listen(ws, q):
 			data = Model.recv(ws)
 			if 'action' in data:
 				q.put(data)
-				#View.printToConsole(data)
 	except ValueError:
 		pass
 
@@ -33,18 +33,10 @@ if __name__ == '__main__':
 	# set validLog to true if valid username & pass, otherwise false
 	validLog = True
 	#Main Login Loop
+
 	while LoginWindow:
 		L.update()
-		#TODO Login Authentication
-		'''
-		try:
-			response = recvQueue.get_nowait()
-			if response['action'] == 'loginFailure':
-				Model.printToConsole(response)
-				validLog = False
-		except queue.Empty:
-			# Nothing received from server
-		'''
+		
 		if (L.login and not validLog):
 			L.password.configure(text="Password: (Does not match)", fg="red")
 			L.login = 0
@@ -59,6 +51,21 @@ if __name__ == '__main__':
 	C.display_message("Hello World! Welcome to the chatroom!", "CHATROOM")
 
 
+
+#testing purposes
+	C.chatRoomNumber = 1
+#testing purposes
+
+# CHAT ROOM SWITCH CHECK		
+	print("Which Chat room do you want to join? 1-2")
+	chatRoomNum = input('')
+	C.chatRoomNumber = int(chatRoomNum)
+	print(C.chatRoomNumber)
+# CHAT ROOM SWITCH CHECK
+
+
+
+
 	# Main loop
 	# TODO: Make this loop an event loop
 	while True:
@@ -67,20 +74,46 @@ if __name__ == '__main__':
 
 		C.update()
 
+		#sending messages
 		if C.TB:
-			jsonData = Model.pythonToJson('message', 'text', C.T)
-			Model.send(ws, jsonData)
-			C.TB = 0
+			# Needs to separate chat room
+			
+			# Chat room # 1
+			if C.chatRoomNumber == 1:
+				C.T = Model.appendMessage(C.T, '1')
+				jsonData = Model.pythonToJson('message', 'text', C.T)
+				Model.send(ws, jsonData)
+				C.TB = 0
 
-		# Exit loop if exit command was sent
-		#if not run:
-		#	break
+			#print(C.T)
 
-		# Send data to View
+			# Chat room # 1
+			if C.chatRoomNumber == 2:
+				C.T = Model.appendMessage(C.T, '2')
+				jsonData = Model.pythonToJson('message', 'text', C.T)
+				Model.send(ws, jsonData)
+				C.TB = 0
+			
+			time.sleep(0.5)
+
+		#receiving messages
 		try:
 			data = recvQueue.get_nowait()
-			if data['action'] == 'userMessage':
-				C.display_message(data['text'], data['user'])
+			#need to only print messages inside your separate chat room
+			if C.chatRoomNumber == 1:
+				if data['action'] == 'userMessage':
+					message = data['text']
+					if message[0] == '1':
+						message = Model.fixMessageString(message)
+						C.display_message(message, data['user'])
+				
+			if C.chatRoomNumber == 2:
+				if data['action'] == 'userMessage':
+					message = data['text']
+					if message[0] == '2':
+						message = Model.fixMessageString(message)
+						C.display_message(message, data['user'])
+				
 		except queue.Empty:
 			pass
 
