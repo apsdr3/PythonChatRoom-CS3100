@@ -71,6 +71,13 @@ class ChatRoom(tk.Tk):
         self.UB = 0
         self.chatRoomNumber = 1
         self.updater = False
+        self.close = 0
+
+        def on_closing():
+            self.close = 1
+            time.sleep(0.1)
+
+        self.protocol("WM_DELETE_WINDOW", on_closing)
         
         self.update()
              
@@ -154,6 +161,12 @@ class Login(tk.Tk):
             self.u = userInput.get()
             self.p = passInput.get()
 
+        def on_closing():
+            self.close = 1
+            time.sleep(0.1)
+        self.close = 0
+        self.protocol("WM_DELETE_WINDOW", on_closing)
+
         #Main Window
         self.title("Login")
         self.login = 0
@@ -226,7 +239,8 @@ class Login(tk.Tk):
         userInput.bind("<FocusOut>", resetColor)
         passInput.bind("<FocusIn>", setColor)
         passInput.bind("<FocusOut>", resetColor)
-        passInput.bind("<Return>", enterBtnLogIn)
+        # passInput.bind("<Return>", enterBtnLogIn)
+        self.bind("<Return>", enterBtnLogIn)
 
         #Submit Button
         submit = tk.Button(self, text='Login', padx=150, bg="#e62727", activebackground="#B31E1E",
@@ -244,6 +258,13 @@ ChatRoom Selection Window
 class Select(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
+
+        def on_closing():
+            self.close = 1
+            time.sleep(0.1)
+        self.close = 0
+        self.protocol("WM_DELETE_WINDOW", on_closing)
+
         def goChat():
             if (selection.get() == "ChatRoom 1"):
                 self.initialRoom = 1

@@ -32,8 +32,9 @@ if __name__ == '__main__':
 	# set validLog to true if valid username & pass, otherwise false
 	validLog = True
 	#Main Login Loop
-	while LoginWindow:
+	while LoginWindow and L.close == 0:
 		L.update()
+		time.sleep(0.01)
 		
 		if (L.login and not validLog):
 			L.password.configure(text="Password: (Does not match)", fg="red")
@@ -45,17 +46,25 @@ if __name__ == '__main__':
 			Model.login(ws, L.u)
 			L.destroy()
 
+	if L.close == 1:
+		L.destroy()
+		exit(0)
+
 	#TODO: Debating whether to keep this window for chat selection or just placing client in chatroom randomly/default to chatroom 1
 	S = Select()
 	SelectWindow = True
-
-	while SelectWindow:
+	while SelectWindow and S.close == 0:
 		#TODO: Fix this so when pressing enter it would load the chatroom
 		S.update()
+		time.sleep(0.01)
 		if (S.initialRoom != 0):
 			SelectWindow = False
 			initialChatRoom = S.initialRoom
 			S.destroy()
+
+	if S.close == 1:
+		S.destroy()
+		exit(0)
 
 	C = ChatRoom()
 
@@ -78,11 +87,12 @@ if __name__ == '__main__':
 	# Main loop
 	# TODO: Make this loop an event loop
 
-	while True:
+	while C.close == 0:
 		# Read user input
 		#run, buff = Model.consoleInput() # Implement event polling so that this line no longer blocks
 
 		C.update()
+		time.sleep(0.01)
 
 		#Used for getting the current selection of chatrooms
 		if (C.updater):
@@ -97,6 +107,14 @@ if __name__ == '__main__':
 		#print(C.chatRoomNumber)
 
 		if C.TB:
+
+			# prepend chat room number to sent messages
+			message = Model.appendMessage(C.T, chr(ord('0') + C.chatRoomNumber))
+			jsonData = Model.pythonToJson('message', 'text', message)
+			Model.send(ws, jsonData)
+			C.TB = 0
+
+			'''
 			if C.chatRoomNumber == 1:
 				C.T = Model.appendMessage(C.T, '1')
 				jsonData = Model.pythonToJson('message', 'text', C.T)
@@ -113,24 +131,22 @@ if __name__ == '__main__':
 				C.TB = 0
 
 			time.sleep(0.5)
+			'''
 
 		#receiving messages
 		try:
-			data = recvQueue.get_nowait()
-			#need to only print messages inside your separate chat room
-			if C.chatRoomNumber == 1:
-				if data['action'] == 'userMessage':
-					message = data['text']
-					if message[0] == '1':
-						message = Model.fixMessageString(message)
-						C.display_message(message, data['user'])
-				
-			if C.chatRoomNumber == 2:
-				if data['action'] == 'userMessage':
-					message = data['text']
-					if message[0] == '2':
-						message = Model.fixMessageString(message)
-						C.display_message(message, data['user'])
+			data = recvQueue.get_nowait()		
+
+			# User messages
+			if data['action'] == 'userMessage':
+				message = data['text']
+				# Only display messages for your chat room
+				if message[0] == chr(ord('0') + C.chatRoomNumber):
+					message = Model.fixMessageString(message)
+					C.display_message(message, data['user'])
+
+			elif data['action'] == 'serverMessage':
+				C.display_message(data['text'], 'SERVER')
 				
 		except queue.Empty:
 			pass
