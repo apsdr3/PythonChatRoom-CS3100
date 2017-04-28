@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 import time
 from tkinter import *
 
@@ -26,6 +27,15 @@ class ChatRoom(tk.Tk):
         #LEFT CONTAINER
         self.lframe = tk.Frame(self, bg="#C0C0C0", relief=SUNKEN, borderwidth=2)
         self.lframe.place(x=25, y=150, width=150, height=650)
+
+        self.chatRoomList = Listbox(self.lframe, bg = "#C0C0C0", borderwidth = 0, highlightthickness = 0,
+                                    justify = 'center')
+        self.chatRoomList.pack(side = BOTTOM)
+        self.chatRoomList.insert(1, "ChatRoom #1")
+        self.chatRoomList.insert(2, "ChatRoom #2")
+        self.chatRoomList.insert(3, "ChatRoom #3")
+        self.chatRoomList.insert(4, "ChatRoom #4")
+        self.chatRoomList.insert(5, "ChatRoom #5")
 
         #MIDDLE CONTAINER
         self.mframe = tk.Frame(self, bg="#C0C0C0", relief=SUNKEN, borderwidth=2)
@@ -58,6 +68,7 @@ class ChatRoom(tk.Tk):
         self.U = ""
         self.TB = 0
         self.UB = 0
+        self.chatRoomNumber = 1
         
         self.update()
              
@@ -79,7 +90,6 @@ class ChatRoom(tk.Tk):
         self.T = self.entry2.get()
         self.TB = 1
         self.entry2.delete(0, END)
-
 
 """
 Login Window
@@ -134,6 +144,11 @@ class Login(tk.Tk):
             self.u = userInput.get()
             self.p = passInput.get()
 
+        def enterBtnLogIn(event):
+            self.login = 1
+            self.u = userInput.get()
+            self.p = passInput.get()
+
         #Main Window
         self.title("Login")
         self.login = 0
@@ -184,6 +199,7 @@ class Login(tk.Tk):
         userInput = tk.Entry(self, bg=color, borderwidth=0, width=58)
         passInput = tk.Entry(self, show="*", bg=color, borderwidth=0, width=58)
 
+        userInput.focus_set()
         userInput.place(x=35, y=113)
         passInput.place(x=35, y=198)
 
@@ -205,6 +221,7 @@ class Login(tk.Tk):
         userInput.bind("<FocusOut>", resetColor)
         passInput.bind("<FocusIn>", setColor)
         passInput.bind("<FocusOut>", resetColor)
+        passInput.bind("<Return>", enterBtnLogIn)
 
         #Submit Button
         submit = tk.Button(self, text='Login', padx=150, bg="#e62727", activebackground="#B31E1E",
@@ -214,6 +231,56 @@ class Login(tk.Tk):
         submit.bind("<Leave>", resetSubmitColor)
 
         submit.place(x=30, y=320)
+
+
+"""
+ChatRoom Selection Window
+"""
+class Select(tk.Tk):
+    def __init__(self, *args, **kwargs):
+        tk.Tk.__init__(self, *args, **kwargs)
+        def goChat():
+            if (selection.get() == "ChatRoom 1"):
+                self.initialRoom = 1
+            elif (selection.get() == "ChatRoom 2"):
+                self.initialRoom = 2
+            elif (selection.get() == "ChatRoom 3"):
+                self.initialRoom = 3
+            elif (selection.get() == "ChatRoom 4"):
+                self.initialRoom = 4
+            elif (selection.get() == "ChatRoom 5"):
+                self.initialRoom = 5
+
+        self.title("Chat Room Selection Screen")
+        self.initialRoom = 0
+        w = 300  # width for the Tk self
+        h = 150  # height for the Tk self
+
+        # get screen width and height
+        ws = self.winfo_screenwidth()  # width of the screen
+        hs = self.winfo_screenheight()  # height of the screen
+
+        # calculate x and y coordinates for the Tk self window
+        x = (ws / 2) - (w / 2)
+        y = (hs / 2) - (h / 2)
+
+        # set the dimensions of the screen
+        # and where it is placed
+        self.geometry('%dx%d+%d+%d' % (w, h, x, y))
+
+        # labels
+        chooseLabel = tk.Label(self, text="Please select a chatroom: ", font="Sans/Serif 12")
+        chooseLabel.pack(pady=10)
+
+        # combobox
+        selection = ttk.Combobox(self, state="readonly")
+        selection.pack(pady=10)
+        selection['values'] = ('ChatRoom 1', 'ChatRoom 2', 'ChatRoom 3', 'ChatRoom 4', 'ChatRoom 5')
+        selection.current(0)
+
+        # button
+        submit = tk.Button(self, text='Start Chatting', padx=45, pady=10, command=goChat)
+        submit.pack()
 
 
 #Temporary function for printing

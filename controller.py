@@ -1,8 +1,7 @@
 import model as Model
 import view as View
 import threading
-from view import ChatRoom
-from view import Login
+from view import *
 import queue
 import time
 
@@ -33,7 +32,6 @@ if __name__ == '__main__':
 	# set validLog to true if valid username & pass, otherwise false
 	validLog = True
 	#Main Login Loop
-
 	while LoginWindow:
 		L.update()
 		
@@ -47,24 +45,35 @@ if __name__ == '__main__':
 			Model.login(ws, L.u)
 			L.destroy()
 
+	#TODO: Debating whether to keep this window for chat selection or just placing client in chatroom randomly/default to chatroom 1
+	S = Select()
+	SelectWindow = True
+
+	while SelectWindow:
+		#TODO: Fix this so when pressing enter it would load the chatroom
+		S.update()
+		if (S.initialRoom != 0):
+			SelectWindow = False
+			initialChatRoom = S.initialRoom
+			S.destroy()
+
 	C = ChatRoom()
-	C.display_message("Hello World! Welcome to the chatroom!", "CHATROOM")
 
+	C.chatRoomNumber = initialChatRoom
+	C.chatRoomList.select_set(C.chatRoomNumber-1)
+	C.display_message("Hello World! Welcome to the chatroom #" + str(C.chatRoomNumber) + "!", "CHATROOM")
+	#testing purposes
+#	C.chatRoomNumber = 1
+	#testing purposes
 
-
-#testing purposes
-	C.chatRoomNumber = 1
-#testing purposes
-
-# CHAT ROOM SWITCH CHECK		
-	print("Which Chat room do you want to join? 1-2")
-	chatRoomNum = input('')
-	C.chatRoomNumber = int(chatRoomNum)
-	print(C.chatRoomNumber)
-# CHAT ROOM SWITCH CHECK
-
-
-
+	"""
+	# CHAT ROOM SWITCH CHECK		
+		print("Which Chat room do you want to join? 1-2")
+		chatRoomNum = input('')
+		C.chatRoomNumber = int(chatRoomNum)
+		print(C.chatRoomNumber)
+	# CHAT ROOM SWITCH CHECK
+	"""
 
 	# Main loop
 	# TODO: Make this loop an event loop
@@ -73,6 +82,15 @@ if __name__ == '__main__':
 		#run, buff = Model.consoleInput() # Implement event polling so that this line no longer blocks
 
 		C.update()
+
+		#Used for getting the current selection of chatrooms
+		selectedChatRoom = C.chatRoomList.curselection()[0]+1 #TODO: Find proper way of doing this (throws errors on exit)
+		if (C.chatRoomNumber != selectedChatRoom):
+			#TODO: Figure out how to clear textbox
+			C.chatRoomNumber = selectedChatRoom
+			C.display_message("Changed to ChatRoom #" + str(C.chatRoomNumber), "CHATROOM")
+		#print(C.chatRoomNumber)
+
 
 		#sending messages
 		if C.TB:
