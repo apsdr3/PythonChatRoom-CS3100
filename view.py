@@ -37,6 +37,7 @@ class ChatRoom(tk.Tk):
         self.chatRoomList.insert(4, "ChatRoom #4")
         self.chatRoomList.insert(5, "ChatRoom #5")
 
+        self.chatRoomList.bind('<Button-1>', self.updateVar)
         #MIDDLE CONTAINER
         self.mframe = tk.Frame(self, bg="#C0C0C0", relief=SUNKEN, borderwidth=2)
         self.mframe.place(x=200, y=150, width=600, height=525)
@@ -69,6 +70,7 @@ class ChatRoom(tk.Tk):
         self.TB = 0
         self.UB = 0
         self.chatRoomNumber = 1
+        self.updater = False
         
         self.update()
              
@@ -90,6 +92,9 @@ class ChatRoom(tk.Tk):
         self.T = self.entry2.get()
         self.TB = 1
         self.entry2.delete(0, END)
+
+    def updateVar(self, event):
+        self.updater = True
 
 """
 Login Window

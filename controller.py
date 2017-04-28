@@ -60,6 +60,7 @@ if __name__ == '__main__':
 	C = ChatRoom()
 
 	C.chatRoomNumber = initialChatRoom
+	selectedChatRoom = S.initialRoom
 	C.chatRoomList.select_set(C.chatRoomNumber-1)
 	C.display_message("Hello World! Welcome to the chatroom #" + str(C.chatRoomNumber) + "!", "CHATROOM")
 	#testing purposes
@@ -74,9 +75,9 @@ if __name__ == '__main__':
 		print(C.chatRoomNumber)
 	# CHAT ROOM SWITCH CHECK
 	"""
-
 	# Main loop
 	# TODO: Make this loop an event loop
+
 	while True:
 		# Read user input
 		#run, buff = Model.consoleInput() # Implement event polling so that this line no longer blocks
@@ -84,26 +85,25 @@ if __name__ == '__main__':
 		C.update()
 
 		#Used for getting the current selection of chatrooms
-		selectedChatRoom = C.chatRoomList.curselection()[0]+1 #TODO: Find proper way of doing this (throws errors on exit)
+		if (C.updater):
+			selectedChatRoom = C.chatRoomList.get(0, "end").index(
+				C.chatRoomList.get(ANCHOR)) + 1  # TODO: Find proper way of doing this (throws errors on exit)
+
 		if (C.chatRoomNumber != selectedChatRoom):
 			#TODO: Figure out how to clear textbox
 			C.chatRoomNumber = selectedChatRoom
 			C.display_message("Changed to ChatRoom #" + str(C.chatRoomNumber), "CHATROOM")
+
 		#print(C.chatRoomNumber)
 
-
-		#sending messages
 		if C.TB:
-			# Needs to separate chat room
-			
-			# Chat room # 1
 			if C.chatRoomNumber == 1:
 				C.T = Model.appendMessage(C.T, '1')
 				jsonData = Model.pythonToJson('message', 'text', C.T)
 				Model.send(ws, jsonData)
 				C.TB = 0
 
-			#print(C.T)
+			# print(C.T)
 
 			# Chat room # 1
 			if C.chatRoomNumber == 2:
@@ -111,7 +111,7 @@ if __name__ == '__main__':
 				jsonData = Model.pythonToJson('message', 'text', C.T)
 				Model.send(ws, jsonData)
 				C.TB = 0
-			
+
 			time.sleep(0.5)
 
 		#receiving messages
