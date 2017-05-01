@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import time
 from tkinter import *
+from PIL import Image, ImageTk
 
 class ChatRoom(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -9,11 +10,18 @@ class ChatRoom(tk.Tk):
 
         self.minsize(825, 825)
         self.title("Chat Room - Client 2")
+        self.configure(bg="#36393E")
 
         #UPPER CONTAINER
         self.uframe = tk.Frame(self, bg="#C0C0C0", relief=SUNKEN, borderwidth=2)
         self.uframe.place(x=25, y=25, width=775, height=100)
-        
+
+        image = Image.open("something2.jpg")
+        photo = ImageTk.PhotoImage(image)
+
+        imageHolder = Label(self.uframe, image = photo)
+        imageHolder.image = photo
+        imageHolder.pack()
         """        
         self.entry1 = tk.Entry(self.uframe, bd=3)
         self.entry1.place(x=10, y=50)
@@ -24,13 +32,46 @@ class ChatRoom(tk.Tk):
         self.button1 = tk.Button(self.uframe, text="Enter", command=self.buttonpress1)
         self.button1.place(x=150, y=50)
         """
+
         #LEFT CONTAINER
         self.lframe = tk.Frame(self, bg="#C0C0C0", relief=SUNKEN, borderwidth=2)
         self.lframe.place(x=25, y=150, width=150, height=650)
 
-        self.chatRoomList = Listbox(self.lframe, bg = "#C0C0C0", borderwidth = 0, highlightthickness = 0,
-                                    justify = 'center')
-        self.chatRoomList.pack(side = BOTTOM)
+        userRoomLabel = tk.Label(self.lframe, text=" Users:", font = "Sans/Serif 12 bold", bg = "#C0C0C0", justify = "center")
+        userRoomLabel.pack(side = TOP)
+
+        self.userRoomList = Listbox(self.lframe, borderwidth = 0, highlightthickness = 0,
+                                    justify = 'center', bg = "#C0C0C0")
+        self.userRoomList.place(x = 15, y = 25, height = 300)
+
+
+        userSet = False
+
+        self.userRoomList.insert(1, "UserExample1")#0
+        self.userRoomList.insert(2, "UserExample2")#1
+        self.userRoomList.insert(3, "UserExample3")#2
+        userSet = True
+        self.userRoomList.delete(2, 3)#based on index, ends on next index
+        #To delete all: self.userRoomList.delete(0, END) or C.userRoomList.delete(0,END) if on other file
+
+        self.userRoomList.config(state="disabled", disabledforeground="Black")
+
+        if userSet: #Throws an error when there is no user
+            #print (self.userRoomList.get(0, "end").index(self.userRoomList.get(END)) + 1)
+            #To have scrollbar show up at more than 19 users
+            if ((self.userRoomList.get(0, "end").index(self.userRoomList.get(END)) + 1) >= 20):
+                self.scrollU = tk.Scrollbar(self.userRoomList)
+                self.scrollU.place(x = 103, height = 300)
+                self.userRoomList.config(yscrollcommand=self.scrollU.set)
+                self.scrollU.config(command=self.userRoomList.yview)
+
+        chatListLabel = tk.Label(self.lframe, text="ChatRooms: ", font = "Sans/Serif 12 bold", bg = "#C0C0C0")
+        chatListLabel.place(x = 25, y = 350)
+
+        #Listbox for listing the chatrooms
+        self.chatRoomList = Listbox(self.lframe, borderwidth = 0, highlightthickness = 0,
+                                    justify = 'center', bg = "#C0C0C0")
+        self.chatRoomList.place(x = 15, y = 375)
         self.chatRoomList.insert(1, "ChatRoom #1")
         self.chatRoomList.insert(2, "ChatRoom #2")
         self.chatRoomList.insert(3, "ChatRoom #3")
@@ -63,6 +104,7 @@ class ChatRoom(tk.Tk):
         self.button2.place(x=550, y=20)
 
         self.entry2.bind('<Return>', self.buttonpress2)
+        self.entry2.focus_force()
 
         #VARIABLES
         self.T = ""
@@ -82,7 +124,7 @@ class ChatRoom(tk.Tk):
         self.update()
              
     def display_message(self,S,U):
-        now = time.strftime("%H:%M:%S" , time.gmtime())
+        now = time.strftime("%H:%M:%S" , time.localtime())
         M = now + " " + U + " : " + S + "\n"
         self.textbox.config(state=NORMAL)
         self.textbox.insert(END, M)
@@ -110,23 +152,24 @@ class Login(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
 
+        bgColor = "#36393E"
         def setColor(event):
             if (self.focus_get() == userInput):
-                line.configure(bg="black")
+                line.configure(bg="white")
             if (self.focus_get() == passInput):
-                line2.configure(bg="black")
+                line2.configure(bg="white")
 
         def resetColor(event):
             if (self.focus_get() != userInput):
-                line.configure(bg="grey")
+                line.configure(bg="black")
             if (self.focus_get() != passInput):
-                line2.configure(bg="grey")
+                line2.configure(bg="black")
 
         def setLine(event):
-            line3.configure(bg="black")
+            line3.configure(bg="white")
 
         def resetLine(event):
-            line3.configure(bg="#F0F0F0")
+            line3.configure(bg=bgColor)
 
         def setSubmitColor(event):
             submit.configure(bg="#B31E1E")
@@ -142,14 +185,14 @@ class Login(tk.Tk):
                 needAcc.configure(text="Have an account?")
                 register.configure(text="Log In")
                 line3.configure(width=35)
-                self.password.configure(text="Password:", fg="black")
+                self.password.configure(text="Password:", fg="white")
             else:
                 welcome.configure(text="Please Log In")
                 submit.configure(text="Login", padx=150)
                 needAcc.configure(text="Need an account?")
                 register.configure(text="Register")
                 line3.configure(width=46)
-                self.password.configure(text="Password:", fg="black")
+                self.password.configure(text="Password:", fg="white")
 
         def on_click():
             self.login = 1
@@ -188,24 +231,28 @@ class Login(tk.Tk):
         # and where it is placed
         self.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
+        #Background Color
+        self.configure(bg = bgColor)
+
+
         # Welcome Label
-        welcome = tk.Label(self, text="Please Log In", font="Sans/Serif 15 bold")
+        welcome = tk.Label(self, text="Please Log In", font="Sans/Serif 15 bold", fg="White", bg = bgColor)
         welcome.place(x=130, y=20)
 
         # Username Label
-        username = tk.Label(self, text="Username:", font="Sans/Serif 9")
+        username = tk.Label(self, text="Username:", font="Sans/Serif 9", bg = bgColor, fg="White")
         username.place(x=30, y=70)
 
         # Password Label
-        self.password = tk.Label(self, text="Password:", font="Sans/Serif 9")
+        self.password = tk.Label(self, text="Password:", font="Sans/Serif 9", bg = bgColor, fg="White")
         self.password.place(x=30, y=153)
 
         # NeedanAccount Label
-        needAcc = tk.Label(self, text="Need an account?", font="Sans/Serif 9")
+        needAcc = tk.Label(self, text="Need an account?", font="Sans/Serif 9", bg = bgColor, fg="White")
         needAcc.place(x=30, y=380)
 
         # Register/Button
-        register = tk.Label(self, text="Register", font="Sans/Serif 9")
+        register = tk.Label(self, text="Register", font="Sans/Serif 9", bg = bgColor, fg="White")
         register.place(x=135, y=380)
 
         register.bind("<Enter>", setLine)
@@ -213,9 +260,8 @@ class Login(tk.Tk):
         register.bind("<Button-1>", Register_toggle)
 
         # Entries
-        color = '#F0F0F0'
-        userInput = tk.Entry(self, bg=color, borderwidth=0, width=58)
-        passInput = tk.Entry(self, show="*", bg=color, borderwidth=0, width=58)
+        userInput = tk.Entry(self, bg=bgColor, borderwidth=0, width=58, fg="White")
+        passInput = tk.Entry(self, show="*", bg=bgColor, borderwidth=0, width=58, fg="White")
 
         userInput.focus_set()
         userInput.place(x=35, y=113)
@@ -223,17 +269,17 @@ class Login(tk.Tk):
 
         # Lines
         canvas_width = 344
-        canvas_height = 2
+        canvas_height = 1
         # line = under username, line2 = under password, line3 = under register
 
-        line = tk.Canvas(self, width=canvas_width, height=canvas_height, bg="grey")
-        line2 = tk.Canvas(self, width=canvas_width, height=canvas_height, bg="grey")
-        line3 = tk.Canvas(self, width=46, height=1, bg="black")
+        line = tk.Canvas(self, width=canvas_width, height=canvas_height, highlightthickness = 0, bg = "white")
+        line2 = tk.Canvas(self, width=canvas_width, height=canvas_height, highlightthickness = 0, bg = "black")
+        line3 = tk.Canvas(self, width=46, height=1, bg="black", highlightthickness = 0)
 
         line.place(x=30, y=135)
         line2.place(x=30, y=220)
-        line3.place(x=136, y=397)
-        line3.configure(bg="#F0F0F0")
+        line3.place(x=138, y=397)
+        line3.configure(bg="#2E282D")
 
         userInput.bind("<FocusIn>", setColor)
         userInput.bind("<FocusOut>", resetColor)
@@ -259,6 +305,7 @@ class Select(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
 
+        bgColor = "#36393E"
         def on_closing():
             self.close = 1
             time.sleep(0.1)
@@ -277,8 +324,21 @@ class Select(tk.Tk):
             elif (selection.get() == "ChatRoom 5"):
                 self.initialRoom = 5
 
+        def enterPress(event):
+            if (selection.get() == "ChatRoom 1"):
+                self.initialRoom = 1
+            elif (selection.get() == "ChatRoom 2"):
+                self.initialRoom = 2
+            elif (selection.get() == "ChatRoom 3"):
+                self.initialRoom = 3
+            elif (selection.get() == "ChatRoom 4"):
+                self.initialRoom = 4
+            elif (selection.get() == "ChatRoom 5"):
+                self.initialRoom = 5
+
         self.title("Chat Room Selection Screen")
         self.initialRoom = 0
+        #self.focus_force()
         w = 300  # width for the Tk self
         h = 150  # height for the Tk self
 
@@ -293,20 +353,24 @@ class Select(tk.Tk):
         # set the dimensions of the screen
         # and where it is placed
         self.geometry('%dx%d+%d+%d' % (w, h, x, y))
-
+        self.configure(bg = bgColor)
         # labels
-        chooseLabel = tk.Label(self, text="Please select a chatroom: ", font="Sans/Serif 12")
+        chooseLabel = tk.Label(self, text="Please select a chatroom: ", font="Sans/Serif 12", fg = "white", bg = bgColor)
         chooseLabel.pack(pady=10)
 
         # combobox
-        selection = ttk.Combobox(self, state="readonly")
+        selection = ttk.Combobox(self, state="readonly", takefocus = True)
         selection.pack(pady=10)
         selection['values'] = ('ChatRoom 1', 'ChatRoom 2', 'ChatRoom 3', 'ChatRoom 4', 'ChatRoom 5')
         selection.current(0)
+        selection.focus_force()
 
         # button
-        submit = tk.Button(self, text='Start Chatting', padx=45, pady=10, command=goChat)
+        submit = tk.Button(self, text='Start Chatting', bg = "#e62727", activebackground = "#B31E1E",
+        activeforeground = "white", fg = "white", font = "Sans/serif 12 bold", padx=45, pady=10, command=goChat)
         submit.pack()
+
+        self.bind("<Return>", enterPress)
 
 
 #Temporary function for printing

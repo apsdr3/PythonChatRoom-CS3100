@@ -4,6 +4,7 @@ import threading
 from view import *
 import queue
 import time
+import json
 
 def listen(ws, q):
 	try:
@@ -50,11 +51,11 @@ if __name__ == '__main__':
 		L.destroy()
 		exit(0)
 
+
 	#TODO: Debating whether to keep this window for chat selection or just placing client in chatroom randomly/default to chatroom 1
 	S = Select()
 	SelectWindow = True
 	while SelectWindow and S.close == 0:
-		#TODO: Fix this so when pressing enter it would load the chatroom
 		S.update()
 		time.sleep(0.01)
 		if (S.initialRoom != 0):
@@ -97,11 +98,13 @@ if __name__ == '__main__':
 		#Used for getting the current selection of chatrooms
 		if (C.updater):
 			selectedChatRoom = C.chatRoomList.get(0, "end").index(
-				C.chatRoomList.get(ANCHOR)) + 1  # TODO: Find proper way of doing this (throws errors on exit)
+				C.chatRoomList.get(ANCHOR)) + 1
 
 		if (C.chatRoomNumber != selectedChatRoom):
-			#TODO: Figure out how to clear textbox
 			C.chatRoomNumber = selectedChatRoom
+			C.textbox.config(state=NORMAL)
+			C.textbox.delete(1.0, END)
+			C.textbox.config(state=DISABLED)
 			C.display_message("Changed to ChatRoom #" + str(C.chatRoomNumber), "CHATROOM")
 
 		#print(C.chatRoomNumber)
@@ -147,7 +150,9 @@ if __name__ == '__main__':
 
 			elif data['action'] == 'serverMessage':
 				C.display_message(data['text'], 'SERVER')
-				
+			#elif data['action'] == 'getUserList':
+				#TODO: If not able to print users for a specific chatroom, we could just print the users for
+				#TODO  all the chat rooms
 		except queue.Empty:
 			pass
 
