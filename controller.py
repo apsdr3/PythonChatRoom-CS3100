@@ -72,8 +72,7 @@ if __name__ == '__main__':
 	C.chatRoomNumber = initialChatRoom
 	selectedChatRoom = S.initialRoom
 	C.chatRoomList.select_set(C.chatRoomNumber-1)
-	C.display_message("Hello World! Welcome to the chatroom #" + str(C.chatRoomNumber) + "!", "CHATROOM")
-
+	C.display_message("Welcome to ChatRoom #" + str(C.chatRoomNumber) + "!", "CHATROOM")
 
 	# Main loop
 	while C.close == 0:
@@ -91,9 +90,12 @@ if __name__ == '__main__':
 			C.textbox.config(state=NORMAL)
 			C.textbox.delete(1.0, END)
 			C.textbox.config(state=DISABLED)
-			C.display_message("Changed to ChatRoom #" + str(C.chatRoomNumber), "CHATROOM")
-
-		#print(C.chatRoomNumber)
+			C.display_message("Welcome to ChatRoom #" + str(C.chatRoomNumber) + "!", "CHATROOM")
+			
+			baseMessage = "ENTERED THE CHATROOM :"
+			message = Model.appendMessage(baseMessage, chr(ord('0') + C.chatRoomNumber))
+			jsonData = Model.pythonToJson('message', 'text', message)
+			Model.send(ws, jsonData)
 
 		if C.TB:
 
