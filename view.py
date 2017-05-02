@@ -22,16 +22,6 @@ class ChatRoom(tk.Tk):
         imageHolder = Label(self.uframe, image = photo)
         imageHolder.image = photo
         imageHolder.pack()
-        """        
-        self.entry1 = tk.Entry(self.uframe, bd=3)
-        self.entry1.place(x=10, y=50)
-
-        self.label1 = tk.Label(self.uframe, text="User Name : ", bg="#C0C0C0")
-        self.label1.place(x=10, y=25)
-        
-        self.button1 = tk.Button(self.uframe, text="Enter", command=self.buttonpress1)
-        self.button1.place(x=150, y=50)
-        """
 
         #LEFT CONTAINER
         self.lframe = tk.Frame(self, bg="#C0C0C0", relief=SUNKEN, borderwidth=2)
@@ -373,13 +363,6 @@ class Select(tk.Tk):
         self.bind("<Return>", enterPress)
 
 
-#Temporary function for printing
+#Debug function for printing to console
 def printToConsole(data):
-    if data['action'] == 'userMessage':
-        print("> {}: {}".format(data['user'], data['text']))
-    elif data['action'] == 'serverMessage':
-        print("> SERVER: {}".format(data['text']))
-    elif data['action'] == 'loginFailure':
-        print("> LOGIN FAILED: {}".format(data['reason']))
-    #else:
-        #print(data)
+    print(data)

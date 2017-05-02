@@ -73,24 +73,10 @@ if __name__ == '__main__':
 	selectedChatRoom = S.initialRoom
 	C.chatRoomList.select_set(C.chatRoomNumber-1)
 	C.display_message("Hello World! Welcome to the chatroom #" + str(C.chatRoomNumber) + "!", "CHATROOM")
-	#testing purposes
-#	C.chatRoomNumber = 1
-	#testing purposes
 
-	"""
-	# CHAT ROOM SWITCH CHECK		
-		print("Which Chat room do you want to join? 1-2")
-		chatRoomNum = input('')
-		C.chatRoomNumber = int(chatRoomNum)
-		print(C.chatRoomNumber)
-	# CHAT ROOM SWITCH CHECK
-	"""
+
 	# Main loop
-	# TODO: Make this loop an event loop
-
 	while C.close == 0:
-		# Read user input
-		#run, buff = Model.consoleInput() # Implement event polling so that this line no longer blocks
 
 		C.update()
 		time.sleep(0.01)
@@ -117,25 +103,6 @@ if __name__ == '__main__':
 			Model.send(ws, jsonData)
 			C.TB = 0
 
-			'''
-			if C.chatRoomNumber == 1:
-				C.T = Model.appendMessage(C.T, '1')
-				jsonData = Model.pythonToJson('message', 'text', C.T)
-				Model.send(ws, jsonData)
-				C.TB = 0
-
-			# print(C.T)
-
-			# Chat room # 1
-			if C.chatRoomNumber == 2:
-				C.T = Model.appendMessage(C.T, '2')
-				jsonData = Model.pythonToJson('message', 'text', C.T)
-				Model.send(ws, jsonData)
-				C.TB = 0
-
-			time.sleep(0.5)
-			'''
-
 		#receiving messages
 		try:
 			data = recvQueue.get_nowait()		
@@ -150,9 +117,15 @@ if __name__ == '__main__':
 
 			elif data['action'] == 'serverMessage':
 				C.display_message(data['text'], 'SERVER')
-			#elif data['action'] == 'getUserList':
+			elif data['action'] == 'getUserList':
+				# {"action":"getUserList", "users":[{"name":"Tom","id":0}]}
 				#TODO: If not able to print users for a specific chatroom, we could just print the users for
 				#TODO  all the chat rooms
+				pass
+			elif data['action'] == 'newUser':
+				pass
+			elif data['action'] == 'removeUser':
+				pass
 		except queue.Empty:
 			pass
 
