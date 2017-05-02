@@ -46,3 +46,8 @@ def appendMessage(message, number):
 def fixMessageString(message):
 	message = message[1:]
 	return message
+
+def getUsers():
+	pythonData = {'action':'getUsers'}
+	jsonData = json.dumps(pythonData)
+	return jsonData;
