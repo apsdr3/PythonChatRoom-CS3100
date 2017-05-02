@@ -86,6 +86,9 @@ class ChatRoom(tk.Tk):
         self.chatRoomNumber = 1
         self.updater = False
         self.close = 0
+        self.refList = []
+        self.emoteStrings = ["wink", "rage", "poop", "grinning", "kissing", "nerd", "money_mouth",
+                             "neutral_face", "expressionless", "anguished", "smiley", "smile", "smirk", "gosnell"]
 
         def on_closing():
             self.close = 1
@@ -135,6 +138,22 @@ class ChatRoom(tk.Tk):
                 self.scrollU.place(x = 103, height = 300)
                 self.userRoomList.config(yscrollcommand=self.scrollU.set)
                 self.scrollU.config(command=self.userRoomList.yview)
+
+    def isEmote(self, message):
+        if (message in self.emoteStrings):
+            return True
+        else:
+            return False
+
+    def createEmote(self, message):
+        self.textbox.config(state=NORMAL)
+        image = Image.open( "emotes/"+message+".png")
+        emote = ImageTk.PhotoImage(image)
+        self.emote = emote
+        self.refList.append(self.emote)  # garbage collection prevention
+        self.textbox.image_create(END, image=emote)
+        self.textbox.insert(END, '\n')
+        self.textbox.config(state=DISABLED)
 
     def updateUsers(self, users):
         self.userRoomList.delete(0, END)

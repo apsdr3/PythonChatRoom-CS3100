@@ -126,8 +126,17 @@ if __name__ == '__main__':
 				# Only display messages for your chat room
 				if message[0] == chr(ord('0') + C.chatRoomNumber):
 					message = Model.fixMessageString(message)
-					C.display_message(message, data['user'])
-
+					if (C.isEmote(message)):
+						C.createEmote(message)
+					elif(message == "!help"):
+						helpmsg = "Current emotes are: "
+						for i in range(0, len(C.emoteStrings)):
+							helpmsg = helpmsg + C.emoteStrings[i]
+							if (i != len(C.emoteStrings)):
+								helpmsg = helpmsg + ", "
+						C.display_message(helpmsg, 'SERVER')
+					else:
+						C.display_message(message, data['user'])
 			elif data['action'] == 'serverMessage':
 				C.display_message(data['text'], 'SERVER')
 			elif data['action'] == 'getUserList':
