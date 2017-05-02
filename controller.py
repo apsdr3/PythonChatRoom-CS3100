@@ -91,6 +91,12 @@ if __name__ == '__main__':
 				C.chatRoomList.get(ANCHOR)) + 1
 
 		if (C.chatRoomNumber != selectedChatRoom):
+			#Print exit
+			baseMessage = "LEFT THE CHATROOM"
+			message = Model.appendMessage(baseMessage, chr(ord('0') + C.chatRoomNumber))
+			jsonData = Model.pythonToJson('message', 'text', message)
+			Model.send(ws, jsonData)
+
 			C.chatRoomNumber = selectedChatRoom
 			C.textbox.config(state=NORMAL)
 			C.textbox.delete(1.0, END)
