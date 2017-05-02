@@ -33,27 +33,9 @@ class ChatRoom(tk.Tk):
         self.userRoomList = Listbox(self.lframe, borderwidth = 0, highlightthickness = 0,
                                     justify = 'center', bg = "#C0C0C0")
         self.userRoomList.place(x = 15, y = 25, height = 300)
+        #self.userRoomList.config(state="enabled", disabledforeground="Black")
 
-
-        userSet = False
-
-        self.userRoomList.insert(1, "UserExample1")#0
-        self.userRoomList.insert(2, "UserExample2")#1
-        self.userRoomList.insert(3, "UserExample3")#2
-        userSet = True
-        self.userRoomList.delete(2, 3)#based on index, ends on next index
-        #To delete all: self.userRoomList.delete(0, END) or C.userRoomList.delete(0,END) if on other file
-
-        self.userRoomList.config(state="disabled", disabledforeground="Black")
-
-        if userSet: #Throws an error when there is no user
-            #print (self.userRoomList.get(0, "end").index(self.userRoomList.get(END)) + 1)
-            #To have scrollbar show up at more than 19 users
-            if ((self.userRoomList.get(0, "end").index(self.userRoomList.get(END)) + 1) >= 20):
-                self.scrollU = tk.Scrollbar(self.userRoomList)
-                self.scrollU.place(x = 103, height = 300)
-                self.userRoomList.config(yscrollcommand=self.scrollU.set)
-                self.scrollU.config(command=self.userRoomList.yview)
+        self.userSet = False
 
         chatListLabel = tk.Label(self.lframe, text="ChatRooms: ", font = "Sans/Serif 12 bold", bg = "#C0C0C0")
         chatListLabel.place(x = 25, y = 350)
@@ -134,6 +116,37 @@ class ChatRoom(tk.Tk):
 
     def updateVar(self, event):
         self.updater = True
+
+
+
+    #self.userRoomList.insert(1, "UserExample1")#0
+    #self.userRoomList.insert(2, "UserExample2")#1
+    #self.userRoomList.insert(3, "UserExample3")#2
+    #userSet = True
+    #self.userRoomList.delete(2, 3)#based on index, ends on next index
+    #To delete all: self.userRoomList.delete(0, END) or C.userRoomList.delete(0,END) if on other file
+
+    def userListScroll(self):
+        if self.userSet: #Throws an error when there is no user
+            #print (self.userRoomList.get(0, "end").index(self.userRoomList.get(END)) + 1)
+            #To have scrollbar show up at more than 19 users
+            if ((self.userRoomList.get(0, "end").index(self.userRoomList.get(END)) + 1) >= 20):
+                self.scrollU = tk.Scrollbar(self.userRoomList)
+                self.scrollU.place(x = 103, height = 300)
+                self.userRoomList.config(yscrollcommand=self.scrollU.set)
+                self.scrollU.config(command=self.userRoomList.yview)
+
+    def updateUsers(self, users):
+        self.userRoomList.delete(0, END)
+        if len(users) > 0:
+            self.userSet = True
+        else:
+            self.userSet = False
+
+        for i in range(len(users)):
+            self.userRoomList.insert(i, users[i]['name'])
+        #self.userListScroll()
+        self.update()
 
 """
 Login Window

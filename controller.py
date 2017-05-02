@@ -74,7 +74,6 @@ if __name__ == '__main__':
 	C.chatRoomList.select_set(C.chatRoomNumber-1)
 	C.display_message("Hello World! Welcome to the chatroom #" + str(C.chatRoomNumber) + "!", "CHATROOM")
 
-
 	# Main loop
 	while C.close == 0:
 
@@ -106,7 +105,7 @@ if __name__ == '__main__':
 		#receiving messages
 		try:
 			data = recvQueue.get_nowait()		
-
+			View.printToConsole(data);
 			# User messages
 			if data['action'] == 'userMessage':
 				message = data['text']
@@ -119,13 +118,13 @@ if __name__ == '__main__':
 				C.display_message(data['text'], 'SERVER')
 			elif data['action'] == 'getUserList':
 				# {"action":"getUserList", "users":[{"name":"Tom","id":0}]}
-				#TODO: If not able to print users for a specific chatroom, we could just print the users for
-				#TODO  all the chat rooms
-				pass
-			elif data['action'] == 'newUser':
-				pass
-			elif data['action'] == 'removeUser':
-				pass
+				userlist = []
+				for user in data['users']:
+					userlist.append(user)
+				C.updateUsers(userlist)
+			elif data['action'] == 'newUser' or data['action'] == 'removeUser':
+				Model.send(ws, Model.getUsers())
+
 		except queue.Empty:
 			pass
 
