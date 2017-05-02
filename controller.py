@@ -132,7 +132,7 @@ if __name__ == '__main__':
 						helpmsg = "Current emotes are: "
 						for i in range(0, len(C.emoteStrings)):
 							helpmsg = helpmsg + C.emoteStrings[i]
-							if (i != len(C.emoteStrings)):
+							if (i != len(C.emoteStrings)-1):
 								helpmsg = helpmsg + ", "
 						C.display_message(helpmsg, 'SERVER')
 					else:
